@@ -18,21 +18,23 @@
 
 
 
-    <meta name="description" content="前言近幾年非關聯式資料庫（NoSQL）成為大家時常討論的技術主題，而 MongoDB 則是最廣為人知的開源 NoSQL 資料庫。 本篇文章是系列文新手到進階學 MongoDB 的第一篇。架構如下：  MongoDB 的資料組成：Collection與Document MongoDB 的資料儲存：什麼是BSON？ MongoDB 基礎語法：創建第一筆資料">
+    <meta name="description" content="前言近幾年非關聯式資料庫（NoSQL）成為大家時常討論的技術主題，而 MongoDB 則是最廣為人知的開源 NoSQL 資料庫。 本篇文章是系列文新手到進階學 MongoDB 的第一篇。架構如下：  MongoDB 是什麼？ MongoDB 的層級架構：Database、Collection、Document MongoDB 的資料儲存：什麼是BSON？ MongoDB 基礎語法：創建第一筆資料">
 <meta property="og:type" content="article">
 <meta property="og:title" content="新手到進階學 MongoDB（1）- MongoDB 基礎教學">
 <meta property="og:url" content="https://suki.website/mongodb-from-scratch/1/">
 <meta property="og:site_name" content="Suki&#39;s blog">
-<meta property="og:description" content="前言近幾年非關聯式資料庫（NoSQL）成為大家時常討論的技術主題，而 MongoDB 則是最廣為人知的開源 NoSQL 資料庫。 本篇文章是系列文新手到進階學 MongoDB 的第一篇。架構如下：  MongoDB 的資料組成：Collection與Document MongoDB 的資料儲存：什麼是BSON？ MongoDB 基礎語法：創建第一筆資料">
+<meta property="og:description" content="前言近幾年非關聯式資料庫（NoSQL）成為大家時常討論的技術主題，而 MongoDB 則是最廣為人知的開源 NoSQL 資料庫。 本篇文章是系列文新手到進階學 MongoDB 的第一篇。架構如下：  MongoDB 是什麼？ MongoDB 的層級架構：Database、Collection、Document MongoDB 的資料儲存：什麼是BSON？ MongoDB 基礎語法：創建第一筆資料">
 <meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://suki.website/mongodb-from-scratch/1/structure.png">
 <meta property="article:published_time" content="2021-07-22T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-07-28T02:13:28.405Z">
+<meta property="article:modified_time" content="2021-07-28T03:50:40.689Z">
 <meta property="article:author" content="Suki Wang">
 <meta property="article:tag" content="mongodb">
 <meta property="article:tag" content="database">
 <meta property="article:tag" content="mongodb-from-scratch">
 <meta property="article:tag" content="mongodb 教學">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://suki.website/mongodb-from-scratch/1/structure.png">
 
 
 
@@ -169,49 +171,71 @@
         <html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近幾年<code>非關聯式資料庫（NoSQL）</code>成為大家時常討論的技術主題，而 MongoDB 則是最廣為人知的開源 NoSQL 資料庫。</p>
 <p>本篇文章是系列文<a href="/tags/mongodb-from-scratch/">新手到進階學 MongoDB</a> 的第一篇。架構如下：</p>
 <ul>
-<li>MongoDB 的資料組成：<code>Collection</code>與<code>Document</code></li>
+<li>MongoDB 是什麼？</li>
+<li>MongoDB 的層級架構：<code>Database</code>、<code>Collection</code>、<code>Document</code></li>
 <li>MongoDB 的資料儲存：什麼是<code>BSON</code>？</li>
 <li>MongoDB 基礎語法：創建第一筆資料</li>
 </ul>
 <span id="more"></span>
 
+
+<h2 id="MongoDB-是什麼？"><a href="#MongoDB-是什麼？" class="headerlink" title="MongoDB 是什麼？"></a>MongoDB 是什麼？</h2><p>在 MongoDB 的<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/introduction/">官方文件</a>裡開宗明義的寫了：</p>
 <blockquote>
-<p>網路上已有數篇 MongoDB 的安裝教學文，因此不在本系列文中贅述。<br>還沒有安裝 MongoDB 話可以參考<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/installation/">官方安裝教學</a>。</p>
+<p>MongoDB is a document database designed for ease of development and scaling.</p>
 </blockquote>
-<h2 id="MongoDB-架構"><a href="#MongoDB-架構" class="headerlink" title="MongoDB 架構"></a>MongoDB 架構</h2><h3 id="Why-NoSQL"><a href="#Why-NoSQL" class="headerlink" title="Why NoSQL"></a>Why NoSQL</h3><p>若曾經接觸過<code>關聯式資料庫（Relational database/SQL資料庫）</code>，應該對於<code>Table（資料表）</code>、<code>Column（欄）</code>的概念不陌生。在關聯式資料庫中我們需要嚴格定義<code>Schema（綱要）</code>，並確保每筆資料都遵循 schema 的定義。</p>
-<p>例如，當我們定義<code>User 資料表</code>的 schema 需要包含名字、職業、血型三個欄位，則資料表中的每筆資料（也就是每位 user）都必須不多不少的擁有這三個欄位。問題來了，如果今天我只想幫某個 user 紀錄嗜好呢？由於資料必須遵守 schema 定義，因此只能在 schema 加上嗜好欄位，並幫現有的所有 user 都填上嗜好，儘管大多 user 都沒有紀錄嗜好的需求！</p>
-<p>面對上述的情境，<code>NoSQL</code>的 MongoDB 就彈性許多。</p>
-<h3 id="MongoDB-中的-Collection"><a href="#MongoDB-中的-Collection" class="headerlink" title="MongoDB 中的 Collection"></a>MongoDB 中的 Collection</h3><p><code>Collection</code>就是資料的集合，概念好比關聯式資料庫的 Table。差別在於，我們不需要對 collection 定義任何資料的 Schema。我們稱 MongoDB 的特性是<code>Schemaless</code>。</p>
-<h3 id="MongoDB-中的-Document"><a href="#MongoDB-中的-Document" class="headerlink" title="MongoDB 中的 Document"></a>MongoDB 中的 Document</h3><p><code>Document</code>是存放在 collection 中的一筆資料，概念好比關聯式資料庫的<code>Row（資料）</code>。Document 的形式就像 JSON 一般， 由多組 <code>key-value</code> 組成，且每筆 document 的長相<strong>可以不同</strong>。</p>
+<p>由這句話我們可以看出：</p>
+<ol>
+<li>MongoDB 是一個由<code>document</code>為主的 database</li>
+<li>MongoDB 的優點是<code>易於開發、擴展</code></li>
+</ol>
+<p>我們先來談談為什麼 mongoDB 有<code>易於開發</code>的優點，以及為什麼近幾年很多新創都會選擇使用 MongoDB：</p>
+<h3 id="為什麼-MongoDB-易於開發？"><a href="#為什麼-MongoDB-易於開發？" class="headerlink" title="為什麼 MongoDB 易於開發？"></a>為什麼 MongoDB 易於開發？</h3><p>若曾經接觸過<code>關聯式資料庫（Relational database/SQL 資料庫）</code>，應該對於<code>Schema（綱要）</code>的概念不陌生。在關聯式資料庫中我們必須事先定義好 Schema（也就是每張<code>Table（資料表）</code>中包含哪些<code>Column（欄）</code>），並確保每筆儲存的<code>Row（資料）</code>都遵循 schema 的定義。</p>
+<p>例如我們想要在 SQL 資料庫中紀錄有關<code>user</code>的相關資訊，如果最初定義<code>User 資料表</code>的 schema 有名字、職業、血型三個欄位，則資料表中的每筆資料（也就是每位 user）都必須「不多不少」的擁有這三個欄位。問題來了，如果今天我只想幫其中一個 user 紀錄嗜好呢？</p>
+<p>由於 SQL 資料庫必須遵守 schema 定義，因此必須要：</p>
+<ol>
+<li>先更動 schema，在 schema 加上嗜好欄位</li>
+<li>寫個腳本幫現有的所有 user 都填上嗜好（不知道嗜好的 user 就填入空值）</li>
+</ol>
+<p>是不是挺麻煩的？面對上述的情境，<code>NoSQL</code>的 MongoDB 就彈性許多。</p>
+<blockquote>
+<p>因為 MongoDB 不需要定義 Schema，可以大幅縮短開發時間，也很適合用於<strong>資料格式常變動</strong>的新創應用中。我們稱 MongoDB 的特性是<code>Schemaless</code>。</p>
+</blockquote>
+<h2 id="MongoDB-的層級架構"><a href="#MongoDB-的層級架構" class="headerlink" title="MongoDB 的層級架構"></a>MongoDB 的層級架構</h2><p>再來談談 MongoDB 世界的層級觀念，分別由大而小是<code>Database</code>、<code>Collection</code>與<code>Document</code>。</p>
+<h3 id="Database"><a href="#Database" class="headerlink" title="Database"></a>Database</h3><p>在一個 MongoDB 伺服器中通常會有一至多個<code>Database</code>。通常將不同的應用放在不同 database 中。</p>
+<p>例如某家公司同時擁有產品 A 跟產品 B，且兩個產品資料是不相通的，那就可以在 MongoDB 中建立兩個 database，分別儲存兩個產品的資料。</p>
+<h3 id="Collection"><a href="#Collection" class="headerlink" title="Collection"></a>Collection</h3><p><code>Collection</code>就是資料表，概念好比關聯式資料庫的 Table。通常一個 databse 中會有數個 collection。</p>
+<p>例如針對產品 A，我們可能會想紀錄「購買人資訊」、「製造商資訊」、「販售地點」…等等，因此可以在「產品 A 的 database」 中分別開設對應的 collection。</p>
+<h3 id="Document"><a href="#Document" class="headerlink" title="Document"></a>Document</h3><p><code>Document</code>就是一筆資料，概念好比關聯式資料庫的 Row。通常一個 collection 中會有數筆 document。也因此我們稱 MongoDB 是 <code>document database</code>。</p>
+<p>例如在「購買人資訊」的 collection 中，真正的一筆「購買人資訊」就是一個 document。</p>
+<h3 id="層級架構圖"><a href="#層級架構圖" class="headerlink" title="層級架構圖"></a>層級架構圖</h3><p><img src="/mongodb-from-scratch/1/structure.png"><br><a target="_blank" rel="noopener" href="https://www.udemy.com/course/mongodb-the-complete-developers-guide/">圖片來源</a></p>
+<h2 id="MongoDB-的資料儲存"><a href="#MongoDB-的資料儲存" class="headerlink" title="MongoDB 的資料儲存"></a>MongoDB 的資料儲存</h2><h3 id="Document-的長相"><a href="#Document-的長相" class="headerlink" title="Document 的長相"></a>Document 的長相</h3><p>其實 Document 就長得像 JSON 一樣， 由多組 <code>key-value</code> 組成。</p>
 <p>假如有兩筆描述 user 的 document 長相如下：</p>
 <figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 以下是兩筆 user 的 document</span></span><br><span class="line">{</span><br><span class="line">    <span class="hljs-attr">name</span>: <span class="hljs-string">'Suki'</span>,</span><br><span class="line">    <span class="hljs-attr">job</span>: <span class="hljs-string">'backend developer'</span>,</span><br><span class="line">    <span class="hljs-attr">bloodType</span>: <span class="hljs-string">'A'</span></span><br><span class="line">},</span><br><span class="line">{</span><br><span class="line">    <span class="hljs-attr">name</span>: <span class="hljs-string">'Jam'</span>,</span><br><span class="line">    <span class="hljs-attr">job</span>: <span class="hljs-string">'fullstack developer'</span>,</span><br><span class="line">    <span class="hljs-attr">bloodType</span>: <span class="hljs-string">'A'</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
 
-<p>今天我們突然需要為其中一個 user 紀錄嗜好，只需要在那個 user 的 document 中加入「嗜好」這個新欄位就行，原先存在的其他 user 完全不受影響。</p>
+<p>因為 MongoDB 的 schemeless 特性，當我們突然想為其中一個 user 紀錄嗜好，只需要在那個 user 的 document 中加入「嗜好」這個新欄位就行，其他 user 完全不受影響。</p>
 <figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 為第二位 user 紀錄嗜好</span></span><br><span class="line">{</span><br><span class="line">    <span class="hljs-comment">// 其他 user 不被影響</span></span><br><span class="line">    <span class="hljs-attr">name</span>: <span class="hljs-string">'Suki'</span>,</span><br><span class="line">    <span class="hljs-attr">job</span>: <span class="hljs-string">'backend developer'</span>,</span><br><span class="line">    <span class="hljs-attr">bloodType</span>: <span class="hljs-string">'A'</span></span><br><span class="line">},</span><br><span class="line">{</span><br><span class="line">    <span class="hljs-comment">// 加上 hobbbies 紀錄 user 的嗜好</span></span><br><span class="line">    <span class="hljs-attr">name</span>: <span class="hljs-string">'Jam'</span>,</span><br><span class="line">    <span class="hljs-attr">job</span>: <span class="hljs-string">'fullstack developer'</span>,</span><br><span class="line">    <span class="hljs-attr">bloodType</span>: <span class="hljs-string">'A'</span>,</span><br><span class="line">    <span class="hljs-attr">hobbies</span>: [<span class="hljs-string">'hiking'</span>, <span class="hljs-string">'podcast'</span>, <span class="hljs-string">'sleeping'</span>]</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<p>由於 MongoDB 資料儲存的彈性高，因此適合用於<strong>資料格式常變動</strong>的應用中。</p>
 <blockquote>
-<ul>
-<li>使用關聯式資料庫時，由於資料常被儲存在不同 Table 中，查詢時需要透過<code>Relation（JOIN）</code>找出目標資料。</li>
-<li>使用 NoSQL 資料庫時，有關聯的資料常常會被儲存在<strong>同一個 document 中</strong>。</li>
-</ul>
+<p> 使用 NoSQL 資料庫時，有關聯的資料常常會被儲存在<strong>同一個 document 中</strong>。</p>
 </blockquote>
-<h2 id="MongoDB-的資料儲存"><a href="#MongoDB-的資料儲存" class="headerlink" title="MongoDB 的資料儲存"></a>MongoDB 的資料儲存</h2><h3 id="BSON"><a href="#BSON" class="headerlink" title="BSON"></a>BSON</h3><p>上面有提到，每筆 document 的長相是如 JSON 格式的 key-value 組合。<br>實際 MongoDB 在儲存資料時，使用的是較特殊的<code>BSON</code>格式。</p>
+<h3 id="BSON"><a href="#BSON" class="headerlink" title="BSON"></a>BSON</h3><p>上面有提到，每筆 document 的長相是如 JSON 格式的 key-value 組合。<br>實際 MongoDB 在儲存資料時，使用的是較特殊的<code>BSON</code>格式。(BSON 是 JSON 的二進位表示形式)</p>
 <p>使用 BSON 的優點包含：</p>
 <ul>
 <li>在空間儲存上較有效率</li>
-<li>有更多<code>type（資料格式）</code> 可以使用<ul>
-<li>如後續會提到的<code>ObjectId</code>、<code>Regular Expression</code>、<code>Timestamp</code>等，都是 BSON 支援的格式</li>
+<li>有更多<code>type（資料格式）</code> 可以使用：<ul>
+<li>如<code>ObjectId</code>、<code>Regular Expression</code>、<code>Timestamp</code>等，都是 BSON 支援的格式</li>
 <li>BSON 支援的資料格式列表可以<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/reference/bson-types/">參考官方文件</a></li>
 </ul>
 </li>
 </ul>
-<h3 id="豐富的資料格式"><a href="#豐富的資料格式" class="headerlink" title="豐富的資料格式"></a>豐富的資料格式</h3><p>上面 user 的例子裡使用了<code>String</code> 來描述名字、職業、血型；並使用 <code>Array</code> 來紀錄嗜好。<br>實際上 BSON 支援的 type 有很多，這邊我們再舉一個包含多種 type 的 document 當作範例：</p>
+<p>上面 user 的例子裡使用了<code>String</code> 來描述名字、職業、血型；並使用 <code>Array</code> 來紀錄嗜好。<br>實際上 BSON 支援的 type 有很多，這邊我們再舉一個包含多種 type 的 document 當作範例：</p>
 <figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 一個包含多種資料格式 的 document</span></span><br><span class="line">{</span><br><span class="line">   <span class="hljs-attr">_id</span>: ObjectId(<span class="hljs-string">"5099803df3f4948bd2f98391"</span>), <span class="hljs-comment">// _id 屬性是 ObjectId，常作為主鍵</span></span><br><span class="line">   <span class="hljs-attr">name</span>: { <span class="hljs-attr">first</span>: <span class="hljs-string">"Alan"</span>, <span class="hljs-attr">last</span>: <span class="hljs-string">"Turing"</span> }, <span class="hljs-comment">// name 屬性是 object</span></span><br><span class="line">   <span class="hljs-attr">birth</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'Jun 23, 1912'</span>), <span class="hljs-comment">// bitrh 屬性是日期</span></span><br><span class="line">   <span class="hljs-attr">death</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'Jun 07, 1954'</span>),</span><br><span class="line">   <span class="hljs-attr">contribs</span>: [ <span class="hljs-string">"Turing machine"</span>, <span class="hljs-string">"Turing test"</span>, <span class="hljs-string">"Turingery"</span> ],</span><br><span class="line">   <span class="hljs-attr">views</span> : NumberLong(<span class="hljs-number">1250000</span>)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
-<h2 id="MongoDB-基礎語法"><a href="#MongoDB-基礎語法" class="headerlink" title="MongoDB 基礎語法"></a>MongoDB 基礎語法</h2><p>來嘗試創建資料進 MongoDB 吧！<br><a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/installation/">安裝好 MongoDB server</a> 之後，我們需要<a target="_blank" rel="noopener" href="https://docs.mongodb.com/mongodb-shell/#mongodb-binary-bin.mongosh">透過 shell</a> 來對 DB 進行操作。</p>
-<h3 id="創建第一筆資料"><a href="#創建第一筆資料" class="headerlink" title="創建第一筆資料"></a>創建第一筆資料</h3><p>由於 MongoDB 是 Schemaless 資料庫，不需要事先定義資料表欄位，因此創建資料非常容易。<br>只需要輸入簡單的兩行指令即可：</p>
+<h2 id="MongoDB-基礎語法"><a href="#MongoDB-基礎語法" class="headerlink" title="MongoDB 基礎語法"></a>MongoDB 基礎語法</h2><blockquote>
+<p>網路上已有數篇 MongoDB 的安裝教學文，因此不在本系列文中贅述。<br>還沒有安裝 MongoDB 話可以參考<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/installation/">官方安裝教學</a>。</p>
+</blockquote>
+<p>來嘗試創建資料進 MongoDB 吧！<br>我們可以透過不同程式語言對 server 進行操作。這邊示範<a target="_blank" rel="noopener" href="https://docs.mongodb.com/mongodb-shell/#mongodb-binary-bin.mongosh">透過 shell</a> 進行操作。</p>
+<h3 id="創建第一筆資料"><a href="#創建第一筆資料" class="headerlink" title="創建第一筆資料"></a>創建第一筆資料</h3><p>由於 MongoDB 是 Schemaless 資料庫、不需要事先定義資料表欄位，因此創建資料非常容易。<br>只需要輸入簡單的兩行指令即可：</p>
 <figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use myNewDB</span><br><span class="line">db.posts.insertOne( { title: <span class="hljs-string">'hello mongoDB'</span>, author: <span class="hljs-string">'suki'</span> } )</span><br></pre></td></tr></tbody></table></figure>
 <ul>
 <li>第一行指令：指定使用名為<code>myNewDB</code>的 database<ul>
@@ -226,8 +250,8 @@
 </li>
 </ul>
 <p>沒錯！透過 MongoDB 創建資料就是這麼簡單！ヽ(✿ﾟ▽ﾟ)ノ</p>
-<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>MongoDB 強大的原因之一在於<strong>資料儲存的彈性</strong>。<br>由於不需要定義 Schema，因此可以很輕易的加入、修改資料，對於資料格式時常變動的應用相對友善。</p>
-<p><a href="/2021/07/23/mongodb-from-scratch/2/">下篇文章</a>我們將介紹 MongoDB 的<code>C（創建）</code>、<code>R（讀取）</code>、<code>U（更新）</code>、<code>D（刪除）</code>操作～</p>
+<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>MongoDB 強大的原因之一在於<strong>資料儲存的彈性</strong>。<br>由於不需要定義 Schema，因此可以很輕易的加入、修改資料，對於資料格式時常變動的應用非常友善。</p>
+<p><a href="/mongodb-from-scratch/2/">下篇文章</a>我們將介紹 MongoDB 的<code>C（創建）</code>、<code>R（讀取）</code>、<code>U（更新）</code>、<code>D（刪除）</code>操作～</p>
 <h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>由於工作上常使用 MongoDB，原本想趁著 <a target="_blank" rel="noopener" href="https://zh-tw.coderbridge.com/">CoderBridge</a> 在 2020 年舉辦的「開發者寫作松」紀錄一下 MongoDB 的基礎到進階用法，但只寫了兩篇就偷懶症發作 (´ﾟдﾟ`)</p>
 <p>趁著最近經營部落格的計劃死灰復燃，再次挑戰完成本系列教學文 ～<br>本文章最初刊載在 CoderBridge：<a target="_blank" rel="noopener" href="https://zh-tw.coderbridge.com/series/800ffff9f7524d35ac6ecc51fffda4b9/posts/fccb25a652444dfda38629965eac7c7d">7 天新手到進階學 MongoDB</a> 系列文中。</p>
 </body></html>

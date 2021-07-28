@@ -9,14 +9,14 @@
   </url>
   
   <url>
-    <loc>https://suki.website/about/</loc>
+    <loc>https://suki.website/mongodb-from-scratch/1/</loc>
     
     <lastmod>2021-07-28</lastmod>
     
   </url>
   
   <url>
-    <loc>https://suki.website/mongodb-from-scratch/1/</loc>
+    <loc>https://suki.website/about/</loc>
     
     <lastmod>2021-07-28</lastmod>
     
@@ -90,13 +90,6 @@
   </url>
   
   <url>
-    <loc>https://suki.website/categories/technology/</loc>
-    <lastmod>2021-07-28</lastmod>
-    <changefreq>daily</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>https://suki.website/categories/life/blog/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
@@ -104,7 +97,7 @@
   </url>
   
   <url>
-    <loc>https://suki.website/categories/technology/database/</loc>
+    <loc>https://suki.website/categories/technology/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
@@ -112,6 +105,13 @@
   
   <url>
     <loc>https://suki.website/categories/life/podcast/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://suki.website/categories/technology/database/</loc>
     <lastmod>2021-07-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
