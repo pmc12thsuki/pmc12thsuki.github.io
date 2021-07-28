@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+    <meta charset="utf-8">
+<title>新手到進階學 MongoDB（2）- MongoDB CRUD 教學 - Suki&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+<meta name="description" content="軟體開發、學習筆記、生活雜記">
+
+
+
+<meta name="keywords" content="software,development,technology,backend,blog">
+
+
+
+    <meta name="description" content="前言本篇文章是系列文新手到進階學 MongoDB 的第二篇，要帶大家實際對 MongoDB 進行資料操作～ 這篇文章將介紹資料的基本操作，包含：  Create：創建資料 Read：讀取資料 Update：更新資料 Delete：刪除資料  你也可以在上一篇文章中複習 MongoDB 的基礎概念。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新手到進階學 MongoDB（2）- MongoDB CRUD 教學">
+<meta property="og:url" content="https://suki.website/mongodb-from-scratch/2/">
+<meta property="og:site_name" content="Suki&#39;s blog">
+<meta property="og:description" content="前言本篇文章是系列文新手到進階學 MongoDB 的第二篇，要帶大家實際對 MongoDB 進行資料操作～ 這篇文章將介紹資料的基本操作，包含：  Create：創建資料 Read：讀取資料 Update：更新資料 Delete：刪除資料  你也可以在上一篇文章中複習 MongoDB 的基礎概念。">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-07-23T14:07:04.000Z">
+<meta property="article:modified_time" content="2021-07-28T02:17:24.214Z">
+<meta property="article:author" content="Suki Wang">
+<meta property="article:tag" content="mongodb">
+<meta property="article:tag" content="database">
+<meta property="article:tag" content="mongodb-from-scratch">
+<meta property="article:tag" content="mongodb 教學">
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+
+<script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=60f8d93619c5120013482fe3&amp;product=inline-share-buttons' async='async'></script>
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/lioshi.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-H1DHN5Q7LQ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-H1DHN5Q7LQ');
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    
+<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Suki
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item "
+               href="/categories/technology">技術分享</a>
+            
+            <a class="navbar-item "
+               href="/categories/life">生活雜記</a>
+            
+            <a class="navbar-item "
+               href="/categories">文章列表</a>
+            
+            <a class="navbar-item "
+               href="/about">關於我</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜尋" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/pmc12thsuki">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            新手到進階學 MongoDB（2）- MongoDB CRUD 教學
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        
+        <span class="column is-narrow">
+            
+                <time datetime="2021-07-23T14:07:04.000Z" itemprop="datePublished">7月 23 2021</time>
+            
+        </span>
+        
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/technology/">technology</a><span>></span><a class="article-category-link" href="/categories/technology/database/">database</a>
+        </span>
+        
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇文章是系列文<a href="/tags/mongodb-from-scratch/">新手到進階學 MongoDB</a> 的第二篇，要帶大家實際對 MongoDB 進行資料操作～</p>
+<p>這篇文章將介紹資料的基本操作，包含：</p>
+<ul>
+<li><code>Create</code>：創建資料</li>
+<li><code>Read</code>：讀取資料</li>
+<li><code>Update</code>：更新資料</li>
+<li><code>Delete</code>：刪除資料</li>
+</ul>
+<p>你也可以在<a href="/2021/07/23/mongodb-from-scratch/1/">上一篇文章中</a>複習 MongoDB 的基礎概念。</p>
+<span id="more"></span>
+
+<h2 id="Create-創建資料"><a href="#Create-創建資料" class="headerlink" title="Create 創建資料"></a>Create 創建資料</h2><p>在 MongoDB 創建資料的指令很單純，常用的有以下兩個：</p>
+<h3 id="insertOne"><a href="#insertOne" class="headerlink" title="insertOne"></a>insertOne</h3><p>用於創建一筆新的 document。</p>
+<p>下面的例子會在名為<code>products</code>的 collection 中創建一筆包含<code>商品項目（item）</code>及<code>商品數量（qty）</code>的 document：</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.products.insertOne( { item: <span class="hljs-string">"card"</span>, qty: 15 } );</span><br></pre></td></tr></tbody></table></figure>
+
+<h3 id="insertMany"><a href="#insertMany" class="headerlink" title="insertMany"></a>insertMany</h3><p>用於創建多筆新的 documents。</p>
+<p>下面的例子會在名為<code>products</code>的 collection 中創建三筆 documents。我們將要創建的多筆 documents 放在 Array 中：</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">db.products.insertMany( [</span><br><span class="line">      { item: <span class="hljs-string">"card"</span>, qty: 15 },</span><br><span class="line">      { item: <span class="hljs-string">"envelope"</span>, qty: 20 },</span><br><span class="line">      { item: <span class="hljs-string">"stamps"</span> , qty: 30, price: 1000 } // 有 price 資訊的 document</span><br><span class="line">   ] );</span><br></pre></td></tr></tbody></table></figure>
+
+<p>還記得 MongoDB 的特性是 <code>Schemaless</code> 的嗎？在創建 document 時，每筆 document 都可以有不同的格式，如上面的<code>stamps</code>有記錄<code>價錢（price）</code>這個資訊，前面兩筆則沒有。</p>
+<h3 id="ObjectId"><a href="#ObjectId" class="headerlink" title="ObjectId"></a>ObjectId</h3><p>如果你透過 MongoDB shell 輸入上方的指令成功創建資料，會看見 MongoDB 回覆了一個 <code>ObjectId</code> 資訊。這個 ObjectId 是什麼呢？</p>
+<p>其實我們每創建一筆資料時，MongoDB 都會主動賦予 document 一個獨特的<code>_id</code>欄位，其值的<code>type（資料格式）</code>就是我們看到的<code>ObjectId</code>。我們通常會拿<code>_id</code>當作該筆資料的<code>主鍵</code>，因為 MongoDB 可以保證同一個 collection 中每筆 document 的<code>_id</code>都是<strong>獨一無二</strong>的。</p>
+<p>我們也可以使用自己定義的<code>_id</code>作為 documet 主鍵。只需要在創建 document 時帶上<code>_id</code>欄位就行，但我們需要保證自己定義的<code>_id</code>不會重複，否則創建操作會失敗。</p>
+<blockquote>
+<p>由於標準<code>JSON</code>中並沒有定義<code>ObjectId</code>這個 type，由此可見 document 是以<code>BSON</code>儲存，而不是常見的 <code>JSON</code>。</p>
+</blockquote>
+<h2 id="Read-讀取資料"><a href="#Read-讀取資料" class="headerlink" title="Read 讀取資料"></a>Read 讀取資料</h2><p>MongoDB 中可以透過<code>find</code>指令查詢資料。</p>
+<h3 id="find"><a href="#find" class="headerlink" title="find"></a>find</h3><p>單純使用<code>find</code>而不帶參數時，會找到該 collection 中<strong>所有資料</strong>。<br>如下面的例子，我們會拿到記錄在 products 這個 collection 裡的所有 product：</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.products.find() // 拿回所有資料</span><br></pre></td></tr></tbody></table></figure>
+
+<p>一次拿回所有資料雖然方便，但在資料量龐大時非常沒有效率。我們可以在<code>find</code>指令中帶上<code>query（查詢條件）</code>，用來找出符合我們需求的資料。</p>
+<p>下面例子會找出<code>_id = 5</code>的 document，由於我們知道<code>_id</code>是獨一無二的，因此可以預期 MongoDB 只會返回一筆（或零筆）資料：</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.products.find( { _id: 5 } )</span><br></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p>使用 <code>find</code> 時會找出所有符合條件的 document。較少在實際應用中使用。<br>使用 <code>findOne</code> 時，會找出第一筆符合條件的 document。</p>
+</blockquote>
+<h3 id="Operators"><a href="#Operators" class="headerlink" title="Operators"></a>Operators</h3><p>MongoDB 提供了許多<code>Operators（操作符）</code>讓搭配 query 使用，讓我們可以更精準描述想要查詢的資料。</p>
+<p>如下面例子中我們使用<code>$gt（greater than）</code>操作符，幫助我們查詢出所有 distance（距離）&gt; 1000 的航班資訊：</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.flightData.find( { distance: { <span class="hljs-variable">$gt</span>: 1000 } })</span><br></pre></td></tr></tbody></table></figure>
+
+<p>另一個例子中我們使用<code>$in</code>操作符，找出所有 bloodType（血型）是 A 或 B 的 user</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.users.find( { bloodType: { <span class="hljs-variable">$in</span>: [<span class="hljs-string">'A'</span>, <span class="hljs-string">'B'</span>] } } )</span><br></pre></td></tr></tbody></table></figure>
+
+<blockquote>
+<p>更詳細的 Operator 列表可以參考<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/reference/operator/query/">官方文件</a>。</p>
+</blockquote>
+<h2 id="Update-更新資料"><a href="#Update-更新資料" class="headerlink" title="Update 更新資料"></a>Update 更新資料</h2><p>更新跟創建的方式很像。可以選擇只更新一筆資料、也可以一次更新多筆資料。</p>
+<h3 id="updateOne"><a href="#updateOne" class="headerlink" title="updateOne"></a>updateOne</h3><p>在操作更新時，我們使用 query 告訴 MongoDB「想要更新哪些資料」以及「如何更新他們」。</p>
+<p>如下面的例子，我們在<code>inventory</code> collection 中找尋<code>item = paper</code>的資料，並且把資料的 size 設為 100：</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.inventory.updateOne(</span><br><span class="line">   { item: <span class="hljs-string">"paper"</span> },</span><br><span class="line">   {</span><br><span class="line">     <span class="hljs-variable">$set</span>: { <span class="hljs-string">"size"</span>: 100 },</span><br><span class="line">   }</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+<blockquote>
+<p>由於我們使用<code>updateOne</code>指令，就算符合 query 條件的資料有很多筆，MongoDB 也只會更新符合條件的<strong>第一筆</strong> document。</p>
+</blockquote>
+<h3 id="updateMany"><a href="#updateMany" class="headerlink" title="updateMany"></a>updateMany</h3><p>同上述的例子，如果指令換成<code>updateMany</code>，則所有符合條件的資料都會被更新。</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.inventory.updateMany(</span><br><span class="line">   { item: <span class="hljs-string">"paper"</span> }, // 所有 item 欄位值是 paper 的資料都會被更新</span><br><span class="line">   {</span><br><span class="line">     <span class="hljs-variable">$set</span>: { <span class="hljs-string">"size"</span>: 100 },</span><br><span class="line">   }</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>使用<code>updateMany</code>要注意的地方是，如果我們在 query 中沒有放上條件，則 collection 中的<strong>所有資料</strong>都會被更新：</p>
+<figure class="highlight plaintext hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.inventory.updateMany(</span><br><span class="line">    {}, // 由於 query 為空，所有 document 都會加上 message 這個欄位</span><br><span class="line">    {</span><br><span class="line">        $set: { message: 'Opps' }</span><br><span class="line">    }</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<blockquote>
+<p>在實際應用中，因為效能的考量，通常會避免用 updateMany 更新龐大資料</p>
+</blockquote>
+<h2 id="Delete-刪除資料"><a href="#Delete-刪除資料" class="headerlink" title="Delete 刪除資料"></a>Delete 刪除資料</h2><h3 id="deleteOne-與-deleteMany"><a href="#deleteOne-與-deleteMany" class="headerlink" title="deleteOne 與 deleteMany"></a>deleteOne 與 deleteMany</h3><p>刪除資料的邏輯跟查詢一樣，我們必須在 query 中描述要被刪除的資料條件。</p>
+<p>下述例子會將<code>_id = 5</code>的 document 刪除：</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.products.deleteOne( { _id: 5 } )</span><br></pre></td></tr></tbody></table></figure>
+
+<p>相同的，我們可以透過<code>deleteMany</code>一次刪除多筆資料。<br>下面例子會將血型為 A 的 user 全部刪除：</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">db.user.deleteMany(</span><br><span class="line">   { bloodType: <span class="hljs-string">"A"</span> }, // 所有血型為 A 的 user 都被刪除</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+
+<p>要注意的是，如果我們在 query 中沒有放上條件，就會把 collection 裡的所有 documents <strong>全部刪除</strong>，因此要謹慎使用！</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.inventory.deleteMany({}) // 清空 inventory Collection</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>本篇文章介紹了 MongoDB 中基本的<code>CRUD</code>指令。<br>基本上透過這些指令已經能應付大多數的操作。關於每個指令的詳細介紹可以參考<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/crud/">官方文件</a>。</p>
+<p>下篇文章我們將針對更強大的<code>Aggregate</code>操作做介紹。</p>
+<p>本文章最初刊載在 CoderBridge：<a target="_blank" rel="noopener" href="https://zh-tw.coderbridge.com/series/800ffff9f7524d35ac6ecc51fffda4b9/posts/69eb5b9148504709a1d7fb2f027fefb1">7 天新手到進階學 MongoDB</a>系列文中。</p>
+</body></html>
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/mongodb/">#mongodb</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/database/">#database</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/mongodb-from-scratch/">#mongodb-from-scratch</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/mongodb-%E6%95%99%E5%AD%B8/">#mongodb 教學</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop is-hidden-mobile article-nav-prev">
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/mongodb-from-scratch/1/">新手到進階學 MongoDB（1）- MongoDB 基礎教學</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+<div class="sharebox">
+    
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=60f8d93619c5120013482fe3&amp;product=inline-share-buttons' async='async'></script>
+
+</div>
+
+
+
+<div class="comments">
+    <h3 class="title is-4">評論</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://suki.website/mongodb-from-scratch/2/';
+        this.page.identifier = 'mongodb-from-scratch/2/';
+        
+        this.language = 'en';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'suki-website' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2021 Suki Wang&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/pmc12thsuki">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-tw");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+</script>
+
+    
+    
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <style>
+        .hljs {
+            position: relative;
+        }
+
+        .hljs .clipboard-btn {
+            float: right;
+            color: #9a9a9a;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hljs .clipboard-btn:hover {
+          color: #8a8a8a;
+        }
+
+        .hljs > .clipboard-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+        }
+
+        .hljs:hover > .clipboard-btn {
+            display: inline;
+        }
+
+        .hljs > figcaption > .clipboard-btn {
+            margin-right: 4px;
+        }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $('figure.hljs').each(function(i, figure) {
+          var codeId = 'code-' + i;
+          var code = figure.querySelector('.code');
+          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
+          code.id = codeId;
+          copyButton.addClass('clipboard-btn');
+          copyButton.attr('data-clipboard-target-id', codeId);
+
+          var figcaption = figure.querySelector('figcaption');
+
+          if (figcaption) {
+            figcaption.append(copyButton[0]);
+          } else {
+            figure.prepend(copyButton[0]);
+          }
+        })
+
+        var clipboard = new ClipboardJS('.clipboard-btn', {
+          target: function(trigger) {
+            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
+          }
+        });
+        clipboard.on('success', function(e) {
+          e.clearSelection();
+        })
+      })
+    </script>
+
+    
+    
+
+    
+
+
+
+<script src="/js/script.js"></script>
+
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站內搜尋" />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '頁面',
+                CATEGORIES: '分類',
+                TAGS: '標籤',
+                UNTITLED: '(無標題)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+    
+</body>
+</html>

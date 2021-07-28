@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>https://suki.website/mongodb-from-scratch/2/</loc>
+    
+    <lastmod>2021-07-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://suki.website/about/</loc>
+    
+    <lastmod>2021-07-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://suki.website/mongodb-from-scratch/1/</loc>
+    
+    <lastmod>2021-07-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://suki.website/about-blog/</loc>
+    
+    <lastmod>2021-07-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://suki.website/bitwise/brief-ep1-ep5/</loc>
+    
+    <lastmod>2021-07-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://suki.website/404</loc>
+    
+    <lastmod>2021-07-24</lastmod>
+    
+  </url>
+  
+
+  <url>
+    <loc>https://suki.website/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  
+  <url>
+    <loc>https://suki.website/tags/mongodb/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://suki.website/tags/database/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://suki.website/tags/mongodb-from-scratch/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://suki.website/tags/mongodb-%E6%95%99%E5%AD%B8/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+
+  
+  <url>
+    <loc>https://suki.website/categories/life/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://suki.website/categories/technology/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://suki.website/categories/life/blog/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://suki.website/categories/technology/database/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://suki.website/categories/life/podcast/</loc>
+    <lastmod>2021-07-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+</urlset>

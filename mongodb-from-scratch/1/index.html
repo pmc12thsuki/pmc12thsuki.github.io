@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html class="has-navbar-fixed-top">
+<head>
+    <meta charset="utf-8">
+<title>新手到進階學 MongoDB（1）- MongoDB 基礎教學 - Suki&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
+
+
+
+
+<meta name="description" content="軟體開發、學習筆記、生活雜記">
+
+
+
+<meta name="keywords" content="software,development,technology,backend,blog">
+
+
+
+    <meta name="description" content="前言近幾年非關聯式資料庫（NoSQL）成為大家時常討論的技術主題，而 MongoDB 則是最廣為人知的開源 NoSQL 資料庫。 本篇文章是系列文新手到進階學 MongoDB 的第一篇。架構如下：  MongoDB 的資料組成：Collection與Document MongoDB 的資料儲存：什麼是BSON？ MongoDB 基礎語法：創建第一筆資料">
+<meta property="og:type" content="article">
+<meta property="og:title" content="新手到進階學 MongoDB（1）- MongoDB 基礎教學">
+<meta property="og:url" content="https://suki.website/mongodb-from-scratch/1/">
+<meta property="og:site_name" content="Suki&#39;s blog">
+<meta property="og:description" content="前言近幾年非關聯式資料庫（NoSQL）成為大家時常討論的技術主題，而 MongoDB 則是最廣為人知的開源 NoSQL 資料庫。 本篇文章是系列文新手到進階學 MongoDB 的第一篇。架構如下：  MongoDB 的資料組成：Collection與Document MongoDB 的資料儲存：什麼是BSON？ MongoDB 基礎語法：創建第一筆資料">
+<meta property="og:locale" content="zh_TW">
+<meta property="article:published_time" content="2021-07-22T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-07-28T02:13:28.405Z">
+<meta property="article:author" content="Suki Wang">
+<meta property="article:tag" content="mongodb">
+<meta property="article:tag" content="database">
+<meta property="article:tag" content="mongodb-from-scratch">
+<meta property="article:tag" content="mongodb 教學">
+<meta name="twitter:card" content="summary">
+
+
+
+
+
+<link rel="icon" href="/favicon.png">
+
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Ovo|Source+Code+Pro">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/css/lightgallery.min.css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/css/justifiedGallery.min.css">
+
+
+
+<script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=60f8d93619c5120013482fe3&amp;product=inline-share-buttons' async='async'></script>
+
+
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.1.0/styles/lioshi.min.css">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+<script defer src="//use.fontawesome.com/releases/v5.0.8/js/all.js"></script>
+
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-H1DHN5Q7LQ"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-H1DHN5Q7LQ');
+</script>
+
+
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    
+<nav class="navbar is-transparent is-fixed-top navbar-main" role="navigation" aria-label="main navigation">
+    <div class="container">
+        <div class="navbar-brand">
+            <a class="navbar-item navbar-logo" href="/">
+                
+                    
+                    Suki
+                    
+                
+            </a>
+            <div class="navbar-burger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+        
+        <div class="navbar-menu navbar-start">
+            
+            <a class="navbar-item "
+               href="/categories/technology">技術分享</a>
+            
+            <a class="navbar-item "
+               href="/categories/life">生活雜記</a>
+            
+            <a class="navbar-item "
+               href="/categories">文章列表</a>
+            
+            <a class="navbar-item "
+               href="/about">關於我</a>
+            
+        </div>
+        
+        <div class="navbar-menu navbar-end">
+            
+            <a class="navbar-item search" title="搜尋" href="javascript:;">
+                <i class="fas fa-search"></i>
+            </a>
+            
+            
+            
+            <a class="navbar-item" title="GitHub" target="_blank" rel="noopener" href="https://github.com/pmc12thsuki">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+               
+            
+        </div>
+    </div>
+</nav>
+
+    <section class="section">
+    <div class="container">
+    <article class="article content gallery" itemscope itemprop="blogPost">
+    <h1 class="article-title is-size-3 is-size-4-mobile" itemprop="name">
+        
+            新手到進階學 MongoDB（1）- MongoDB 基礎教學
+        
+    </h1>
+    <div class="article-meta columns is-variable is-1 is-multiline is-mobile is-size-7-mobile">
+        
+        <span class="column is-narrow">
+            
+                <time datetime="2021-07-22T16:00:00.000Z" itemprop="datePublished">7月 23 2021</time>
+            
+        </span>
+        
+        
+        <span class="column is-narrow article-category">
+            <i class="far fa-folder"></i>
+            <a class="article-category-link" href="/categories/technology/">technology</a><span>></span><a class="article-category-link" href="/categories/technology/database/">database</a>
+        </span>
+        
+        
+    </div>
+    <div class="article-entry is-size-6-mobile" itemprop="articleBody">
+    
+        <html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>近幾年<code>非關聯式資料庫（NoSQL）</code>成為大家時常討論的技術主題，而 MongoDB 則是最廣為人知的開源 NoSQL 資料庫。</p>
+<p>本篇文章是系列文<a href="/tags/mongodb-from-scratch/">新手到進階學 MongoDB</a> 的第一篇。架構如下：</p>
+<ul>
+<li>MongoDB 的資料組成：<code>Collection</code>與<code>Document</code></li>
+<li>MongoDB 的資料儲存：什麼是<code>BSON</code>？</li>
+<li>MongoDB 基礎語法：創建第一筆資料</li>
+</ul>
+<span id="more"></span>
+
+<blockquote>
+<p>網路上已有數篇 MongoDB 的安裝教學文，因此不在本系列文中贅述。<br>還沒有安裝 MongoDB 話可以參考<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/installation/">官方安裝教學</a>。</p>
+</blockquote>
+<h2 id="MongoDB-架構"><a href="#MongoDB-架構" class="headerlink" title="MongoDB 架構"></a>MongoDB 架構</h2><h3 id="Why-NoSQL"><a href="#Why-NoSQL" class="headerlink" title="Why NoSQL"></a>Why NoSQL</h3><p>若曾經接觸過<code>關聯式資料庫（Relational database/SQL資料庫）</code>，應該對於<code>Table（資料表）</code>、<code>Column（欄）</code>的概念不陌生。在關聯式資料庫中我們需要嚴格定義<code>Schema（綱要）</code>，並確保每筆資料都遵循 schema 的定義。</p>
+<p>例如，當我們定義<code>User 資料表</code>的 schema 需要包含名字、職業、血型三個欄位，則資料表中的每筆資料（也就是每位 user）都必須不多不少的擁有這三個欄位。問題來了，如果今天我只想幫某個 user 紀錄嗜好呢？由於資料必須遵守 schema 定義，因此只能在 schema 加上嗜好欄位，並幫現有的所有 user 都填上嗜好，儘管大多 user 都沒有紀錄嗜好的需求！</p>
+<p>面對上述的情境，<code>NoSQL</code>的 MongoDB 就彈性許多。</p>
+<h3 id="MongoDB-中的-Collection"><a href="#MongoDB-中的-Collection" class="headerlink" title="MongoDB 中的 Collection"></a>MongoDB 中的 Collection</h3><p><code>Collection</code>就是資料的集合，概念好比關聯式資料庫的 Table。差別在於，我們不需要對 collection 定義任何資料的 Schema。我們稱 MongoDB 的特性是<code>Schemaless</code>。</p>
+<h3 id="MongoDB-中的-Document"><a href="#MongoDB-中的-Document" class="headerlink" title="MongoDB 中的 Document"></a>MongoDB 中的 Document</h3><p><code>Document</code>是存放在 collection 中的一筆資料，概念好比關聯式資料庫的<code>Row（資料）</code>。Document 的形式就像 JSON 一般， 由多組 <code>key-value</code> 組成，且每筆 document 的長相<strong>可以不同</strong>。</p>
+<p>假如有兩筆描述 user 的 document 長相如下：</p>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 以下是兩筆 user 的 document</span></span><br><span class="line">{</span><br><span class="line">    <span class="hljs-attr">name</span>: <span class="hljs-string">'Suki'</span>,</span><br><span class="line">    <span class="hljs-attr">job</span>: <span class="hljs-string">'backend developer'</span>,</span><br><span class="line">    <span class="hljs-attr">bloodType</span>: <span class="hljs-string">'A'</span></span><br><span class="line">},</span><br><span class="line">{</span><br><span class="line">    <span class="hljs-attr">name</span>: <span class="hljs-string">'Jam'</span>,</span><br><span class="line">    <span class="hljs-attr">job</span>: <span class="hljs-string">'fullstack developer'</span>,</span><br><span class="line">    <span class="hljs-attr">bloodType</span>: <span class="hljs-string">'A'</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+
+<p>今天我們突然需要為其中一個 user 紀錄嗜好，只需要在那個 user 的 document 中加入「嗜好」這個新欄位就行，原先存在的其他 user 完全不受影響。</p>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 為第二位 user 紀錄嗜好</span></span><br><span class="line">{</span><br><span class="line">    <span class="hljs-comment">// 其他 user 不被影響</span></span><br><span class="line">    <span class="hljs-attr">name</span>: <span class="hljs-string">'Suki'</span>,</span><br><span class="line">    <span class="hljs-attr">job</span>: <span class="hljs-string">'backend developer'</span>,</span><br><span class="line">    <span class="hljs-attr">bloodType</span>: <span class="hljs-string">'A'</span></span><br><span class="line">},</span><br><span class="line">{</span><br><span class="line">    <span class="hljs-comment">// 加上 hobbbies 紀錄 user 的嗜好</span></span><br><span class="line">    <span class="hljs-attr">name</span>: <span class="hljs-string">'Jam'</span>,</span><br><span class="line">    <span class="hljs-attr">job</span>: <span class="hljs-string">'fullstack developer'</span>,</span><br><span class="line">    <span class="hljs-attr">bloodType</span>: <span class="hljs-string">'A'</span>,</span><br><span class="line">    <span class="hljs-attr">hobbies</span>: [<span class="hljs-string">'hiking'</span>, <span class="hljs-string">'podcast'</span>, <span class="hljs-string">'sleeping'</span>]</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>由於 MongoDB 資料儲存的彈性高，因此適合用於<strong>資料格式常變動</strong>的應用中。</p>
+<blockquote>
+<ul>
+<li>使用關聯式資料庫時，由於資料常被儲存在不同 Table 中，查詢時需要透過<code>Relation（JOIN）</code>找出目標資料。</li>
+<li>使用 NoSQL 資料庫時，有關聯的資料常常會被儲存在<strong>同一個 document 中</strong>。</li>
+</ul>
+</blockquote>
+<h2 id="MongoDB-的資料儲存"><a href="#MongoDB-的資料儲存" class="headerlink" title="MongoDB 的資料儲存"></a>MongoDB 的資料儲存</h2><h3 id="BSON"><a href="#BSON" class="headerlink" title="BSON"></a>BSON</h3><p>上面有提到，每筆 document 的長相是如 JSON 格式的 key-value 組合。<br>實際 MongoDB 在儲存資料時，使用的是較特殊的<code>BSON</code>格式。</p>
+<p>使用 BSON 的優點包含：</p>
+<ul>
+<li>在空間儲存上較有效率</li>
+<li>有更多<code>type（資料格式）</code> 可以使用<ul>
+<li>如後續會提到的<code>ObjectId</code>、<code>Regular Expression</code>、<code>Timestamp</code>等，都是 BSON 支援的格式</li>
+<li>BSON 支援的資料格式列表可以<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/reference/bson-types/">參考官方文件</a></li>
+</ul>
+</li>
+</ul>
+<h3 id="豐富的資料格式"><a href="#豐富的資料格式" class="headerlink" title="豐富的資料格式"></a>豐富的資料格式</h3><p>上面 user 的例子裡使用了<code>String</code> 來描述名字、職業、血型；並使用 <code>Array</code> 來紀錄嗜好。<br>實際上 BSON 支援的 type 有很多，這邊我們再舉一個包含多種 type 的 document 當作範例：</p>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 一個包含多種資料格式 的 document</span></span><br><span class="line">{</span><br><span class="line">   <span class="hljs-attr">_id</span>: ObjectId(<span class="hljs-string">"5099803df3f4948bd2f98391"</span>), <span class="hljs-comment">// _id 屬性是 ObjectId，常作為主鍵</span></span><br><span class="line">   <span class="hljs-attr">name</span>: { <span class="hljs-attr">first</span>: <span class="hljs-string">"Alan"</span>, <span class="hljs-attr">last</span>: <span class="hljs-string">"Turing"</span> }, <span class="hljs-comment">// name 屬性是 object</span></span><br><span class="line">   <span class="hljs-attr">birth</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'Jun 23, 1912'</span>), <span class="hljs-comment">// bitrh 屬性是日期</span></span><br><span class="line">   <span class="hljs-attr">death</span>: <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(<span class="hljs-string">'Jun 07, 1954'</span>),</span><br><span class="line">   <span class="hljs-attr">contribs</span>: [ <span class="hljs-string">"Turing machine"</span>, <span class="hljs-string">"Turing test"</span>, <span class="hljs-string">"Turingery"</span> ],</span><br><span class="line">   <span class="hljs-attr">views</span> : NumberLong(<span class="hljs-number">1250000</span>)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="MongoDB-基礎語法"><a href="#MongoDB-基礎語法" class="headerlink" title="MongoDB 基礎語法"></a>MongoDB 基礎語法</h2><p>來嘗試創建資料進 MongoDB 吧！<br><a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/installation/">安裝好 MongoDB server</a> 之後，我們需要<a target="_blank" rel="noopener" href="https://docs.mongodb.com/mongodb-shell/#mongodb-binary-bin.mongosh">透過 shell</a> 來對 DB 進行操作。</p>
+<h3 id="創建第一筆資料"><a href="#創建第一筆資料" class="headerlink" title="創建第一筆資料"></a>創建第一筆資料</h3><p>由於 MongoDB 是 Schemaless 資料庫，不需要事先定義資料表欄位，因此創建資料非常容易。<br>只需要輸入簡單的兩行指令即可：</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">use myNewDB</span><br><span class="line">db.posts.insertOne( { title: <span class="hljs-string">'hello mongoDB'</span>, author: <span class="hljs-string">'suki'</span> } )</span><br></pre></td></tr></tbody></table></figure>
+<ul>
+<li>第一行指令：指定使用名為<code>myNewDB</code>的 database<ul>
+<li>如果<code>myNewDB</code>不存在，MongoDB 會自動幫我們創造</li>
+<li>如果<code>myNewDB</code>已經存在，MongoDB 會切換到該 database 底下</li>
+</ul>
+</li>
+<li>第二行指令：在名為<code>posts</code>的 collection 中創建一筆 document<ul>
+<li>該 document 有 title 跟 author 兩個欄位</li>
+<li>同理，如果<code>posts</code>不存在， MongoDB 會自動幫我們創建</li>
+</ul>
+</li>
+</ul>
+<p>沒錯！透過 MongoDB 創建資料就是這麼簡單！ヽ(✿ﾟ▽ﾟ)ノ</p>
+<h2 id="總結"><a href="#總結" class="headerlink" title="總結"></a>總結</h2><p>MongoDB 強大的原因之一在於<strong>資料儲存的彈性</strong>。<br>由於不需要定義 Schema，因此可以很輕易的加入、修改資料，對於資料格式時常變動的應用相對友善。</p>
+<p><a href="/2021/07/23/mongodb-from-scratch/2/">下篇文章</a>我們將介紹 MongoDB 的<code>C（創建）</code>、<code>R（讀取）</code>、<code>U（更新）</code>、<code>D（刪除）</code>操作～</p>
+<h2 id="後記"><a href="#後記" class="headerlink" title="後記"></a>後記</h2><p>由於工作上常使用 MongoDB，原本想趁著 <a target="_blank" rel="noopener" href="https://zh-tw.coderbridge.com/">CoderBridge</a> 在 2020 年舉辦的「開發者寫作松」紀錄一下 MongoDB 的基礎到進階用法，但只寫了兩篇就偷懶症發作 (´ﾟдﾟ`)</p>
+<p>趁著最近經營部落格的計劃死灰復燃，再次挑戰完成本系列教學文 ～<br>本文章最初刊載在 CoderBridge：<a target="_blank" rel="noopener" href="https://zh-tw.coderbridge.com/series/800ffff9f7524d35ac6ecc51fffda4b9/posts/fccb25a652444dfda38629965eac7c7d">7 天新手到進階學 MongoDB</a> 系列文中。</p>
+</body></html>
+    
+    </div>
+    
+    <div class="columns is-variable is-1 is-multiline is-mobile">
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/mongodb/">#mongodb</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/database/">#database</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/mongodb-from-scratch/">#mongodb-from-scratch</a></span>
+    
+        <span class="column is-narrow"><a class="tag is-light article-tag" href="/tags/mongodb-%E6%95%99%E5%AD%B8/">#mongodb 教學</a></span>
+    
+    </div>
+    
+    
+    <div class="columns is-mobile is-multiline article-nav">
+        <span class="column is-12-mobile is-half-desktop  article-nav-prev">
+            
+            <a href="/mongodb-from-scratch/2/">新手到進階學 MongoDB（2）- MongoDB CRUD 教學</a>
+            
+        </span>
+        <span class="column is-12-mobile is-half-desktop  article-nav-next">
+            
+            <a href="/bitwise/brief-ep1-ep5/">BitWise 一點智慧：關於 Ep1 - Ep5</a>
+            
+        </span>
+    </div>
+    
+</article>
+
+
+<div class="sharebox">
+    
+<div class="sharethis-inline-share-buttons"></div>
+<script type='text/javascript' src='https://platform-api.sharethis.com/js/sharethis.js#property=60f8d93619c5120013482fe3&amp;product=inline-share-buttons' async='async'></script>
+
+</div>
+
+
+
+<div class="comments">
+    <h3 class="title is-4">評論</h3>
+    
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://suki.website/mongodb-from-scratch/1/';
+        this.page.identifier = 'mongodb-from-scratch/1/';
+        
+        this.language = 'en';
+        
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + 'suki-website' + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a target="_blank" rel="noopener" href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</div>
+
+    </div>
+</section>
+    <footer class="footer">
+    <div class="container">
+        <div class="columns content">
+            <div class="column is-narrow has-text-centered">
+                &copy; 2021 Suki Wang&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a
+                        target="_blank" rel="noopener" href="http://github.com/ppoffice/hexo-theme-minos">Minos</a>
+            </div>
+            <div class="column is-hidden-mobile"></div>
+
+            
+            <div class="column is-narrow">
+                <div class="columns is-mobile is-multiline is-centered">
+                
+                    
+                <a class="column is-narrow has-text-black" title="GitHub" target="_blank" rel="noopener" href="https://github.com/pmc12thsuki">
+                    
+                    GitHub
+                    
+                </a>
+                
+                </div>
+            </div>
+            
+            
+        </div>
+    </div>
+</footer>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment-with-locales.min.js"></script>
+
+<!-- test if the browser is outdated -->
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" target="_blank" rel="noopener" href="http://outdatedbrowser.com/">Update my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // plugin function, place inside DOM ready function
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        })
+    });
+</script>
+
+<script>
+    window.FontAwesomeConfig = {
+        searchPseudoElements: true
+    }
+    moment.locale("zh-tw");
+</script>
+
+
+    
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script>
+    MathJax.Hub.Config({
+        "HTML-CSS": {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+</script>
+
+    
+    
+    
+    
+<script src="//cdnjs.cloudflare.com/ajax/libs/lightgallery/1.6.8/js/lightgallery-all.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/justifiedGallery/3.6.5/js/jquery.justifiedGallery.min.js"></script>
+<script>
+    (function ($) {
+        $(document).ready(function () {
+            if (typeof($.fn.lightGallery) === 'function') {
+                $('.article.gallery').lightGallery({ selector: '.gallery-item' });
+            }
+            if (typeof($.fn.justifiedGallery) === 'function') {
+                $('.justified-gallery').justifiedGallery();
+            }
+        });
+    })(jQuery);
+</script>
+
+    
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.0/clipboard.min.js"></script>
+    <style>
+        .hljs {
+            position: relative;
+        }
+
+        .hljs .clipboard-btn {
+            float: right;
+            color: #9a9a9a;
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .hljs .clipboard-btn:hover {
+          color: #8a8a8a;
+        }
+
+        .hljs > .clipboard-btn {
+            display: none;
+            position: absolute;
+            right: 4px;
+            top: 4px;
+        }
+
+        .hljs:hover > .clipboard-btn {
+            display: inline;
+        }
+
+        .hljs > figcaption > .clipboard-btn {
+            margin-right: 4px;
+        }
+    </style>
+    <script>
+      $(document).ready(function () {
+        $('figure.hljs').each(function(i, figure) {
+          var codeId = 'code-' + i;
+          var code = figure.querySelector('.code');
+          var copyButton = $('<button>Copy <i class="far fa-clipboard"></i></button>');
+          code.id = codeId;
+          copyButton.addClass('clipboard-btn');
+          copyButton.attr('data-clipboard-target-id', codeId);
+
+          var figcaption = figure.querySelector('figcaption');
+
+          if (figcaption) {
+            figcaption.append(copyButton[0]);
+          } else {
+            figure.prepend(copyButton[0]);
+          }
+        })
+
+        var clipboard = new ClipboardJS('.clipboard-btn', {
+          target: function(trigger) {
+            return document.getElementById(trigger.getAttribute('data-clipboard-target-id'));
+          }
+        });
+        clipboard.on('success', function(e) {
+          e.clearSelection();
+        })
+      })
+    </script>
+
+    
+    
+
+    
+
+
+
+<script src="/js/script.js"></script>
+
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-mask"></div>
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="站內搜尋" />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '頁面',
+                CATEGORIES: '分類',
+                TAGS: '標籤',
+                UNTITLED: '(無標題)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+    
+</body>
+</html>
