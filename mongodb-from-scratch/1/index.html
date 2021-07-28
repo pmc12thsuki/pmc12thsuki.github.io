@@ -27,7 +27,7 @@
 <meta property="og:locale" content="zh_TW">
 <meta property="og:image" content="https://suki.website/mongodb-from-scratch/1/structure.png">
 <meta property="article:published_time" content="2021-07-22T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-07-28T03:50:40.689Z">
+<meta property="article:modified_time" content="2021-07-28T04:15:31.818Z">
 <meta property="article:author" content="Suki Wang">
 <meta property="article:tag" content="mongodb">
 <meta property="article:tag" content="database">
@@ -188,7 +188,7 @@
 <li>MongoDB 是一個由<code>document</code>為主的 database</li>
 <li>MongoDB 的優點是<code>易於開發、擴展</code></li>
 </ol>
-<p>我們先來談談為什麼 mongoDB 有<code>易於開發</code>的優點，以及為什麼近幾年很多新創都會選擇使用 MongoDB：</p>
+<p>我們先來談談為什麼 mongoDB 有<code>易於開發</code>的優點，以及為什麼近幾年很多新創都會選擇使用 MongoDB。</p>
 <h3 id="為什麼-MongoDB-易於開發？"><a href="#為什麼-MongoDB-易於開發？" class="headerlink" title="為什麼 MongoDB 易於開發？"></a>為什麼 MongoDB 易於開發？</h3><p>若曾經接觸過<code>關聯式資料庫（Relational database/SQL 資料庫）</code>，應該對於<code>Schema（綱要）</code>的概念不陌生。在關聯式資料庫中我們必須事先定義好 Schema（也就是每張<code>Table（資料表）</code>中包含哪些<code>Column（欄）</code>），並確保每筆儲存的<code>Row（資料）</code>都遵循 schema 的定義。</p>
 <p>例如我們想要在 SQL 資料庫中紀錄有關<code>user</code>的相關資訊，如果最初定義<code>User 資料表</code>的 schema 有名字、職業、血型三個欄位，則資料表中的每筆資料（也就是每位 user）都必須「不多不少」的擁有這三個欄位。問題來了，如果今天我只想幫其中一個 user 紀錄嗜好呢？</p>
 <p>由於 SQL 資料庫必須遵守 schema 定義，因此必須要：</p>

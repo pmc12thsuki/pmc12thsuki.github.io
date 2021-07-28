@@ -26,7 +26,7 @@
 <meta property="og:description" content="前言本篇文章是系列文新手到進階學 MongoDB 的第二篇，要帶大家實際對 MongoDB 進行資料操作～ 這篇文章將介紹資料的基本操作，包含：  Create：創建資料 Read：讀取資料 Update：更新資料 Delete：刪除資料  你也可以在上一篇文章中複習 MongoDB 的基礎概念。">
 <meta property="og:locale" content="zh_TW">
 <meta property="article:published_time" content="2021-07-23T14:07:04.000Z">
-<meta property="article:modified_time" content="2021-07-28T03:51:48.992Z">
+<meta property="article:modified_time" content="2021-07-28T05:29:01.525Z">
 <meta property="article:author" content="Suki Wang">
 <meta property="article:tag" content="mongodb">
 <meta property="article:tag" content="database">
@@ -179,11 +179,11 @@
 
 <h2 id="Create-創建資料"><a href="#Create-創建資料" class="headerlink" title="Create 創建資料"></a>Create 創建資料</h2><p>在 MongoDB 創建資料的指令很單純，常用的有以下兩個：</p>
 <h3 id="insertOne"><a href="#insertOne" class="headerlink" title="insertOne"></a>insertOne</h3><p>用於創建一筆新的 document。</p>
-<p>下面的例子會在名為<code>products</code>的 collection 中創建一筆包含<code>商品項目（item）</code>及<code>商品數量（qty）</code>的 document：</p>
+<p>下面的例子會在名為<code>products</code>的 collection 中創建一筆紀錄了<code>商品項目（item）</code>及<code>商品數量（qty）</code>的 document：</p>
 <figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.products.insertOne( { item: <span class="hljs-string">"card"</span>, qty: 15 } );</span><br></pre></td></tr></tbody></table></figure>
 
 <h3 id="insertMany"><a href="#insertMany" class="headerlink" title="insertMany"></a>insertMany</h3><p>用於創建多筆新的 documents。</p>
-<p>下面的例子會在名為<code>products</code>的 collection 中創建三筆 documents。我們將要創建的多筆 documents 放在 Array 中：</p>
+<p>下面的例子會在名為<code>products</code>的 collection 中創建三筆 documents。我們將要創建的多筆 documents 放在 Array 中，mongoDB 會依照 array 中 item 的順序去依序 insert：</p>
 <figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">db.products.insertMany( [</span><br><span class="line">      { item: <span class="hljs-string">"card"</span>, qty: 15 },</span><br><span class="line">      { item: <span class="hljs-string">"envelope"</span>, qty: 20 },</span><br><span class="line">      { item: <span class="hljs-string">"stamps"</span> , qty: 30, price: 1000 } // 有 price 資訊的 document</span><br><span class="line">   ] );</span><br></pre></td></tr></tbody></table></figure>
 
 <p>還記得 MongoDB 的特性是 <code>Schemaless</code> 的嗎？在創建 document 時，每筆 document 都可以有不同的格式，如上面的<code>stamps</code>有記錄<code>價錢（price）</code>這個資訊，前面兩筆則沒有。</p>
@@ -193,15 +193,15 @@
 <blockquote>
 <p>由於標準<code>JSON</code>中並沒有定義<code>ObjectId</code>這個 type，由此可見 document 是以<code>BSON</code>儲存，而不是常見的 <code>JSON</code>。</p>
 </blockquote>
-<h2 id="Read-讀取資料"><a href="#Read-讀取資料" class="headerlink" title="Read 讀取資料"></a>Read 讀取資料</h2><p>MongoDB 中可以透過<code>find</code>指令查詢資料。</p>
-<h3 id="find"><a href="#find" class="headerlink" title="find"></a>find</h3><p>單純使用<code>find</code>而不帶參數時，會找到該 collection 中<strong>所有資料</strong>。<br>如下面的例子，我們會拿到記錄在 products 這個 collection 裡的所有 product：</p>
+<h2 id="Read-讀取資料"><a href="#Read-讀取資料" class="headerlink" title="Read 讀取資料"></a>Read 讀取資料</h2><p>MongoDB 中可以透過<code>find</code>系列指令查詢資料。</p>
+<h3 id="find-與-findOne"><a href="#find-與-findOne" class="headerlink" title="find 與 findOne"></a>find 與 findOne</h3><p>單純使用<code>find</code>而不帶參數時，會找到該 collection 中<strong>所有資料</strong>。<br>如下面的例子，我們會拿到記錄在 products 這個 collection 裡的所有 product：</p>
 <figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.products.find() // 拿回所有資料</span><br></pre></td></tr></tbody></table></figure>
 
-<p>一次拿回所有資料雖然方便，但在資料量龐大時非常沒有效率。我們可以在<code>find</code>指令中帶上<code>query（查詢條件）</code>，用來找出符合我們需求的資料。</p>
+<p>一次拿回所有資料雖然方便但效率低落，因此在現實應用中很少這樣做。<br>我們通常會在<code>find</code>指令中帶上<code>query（查詢條件）</code>，用來找出符合我們需求的資料。</p>
 <p>下面例子會找出<code>_id = 5</code>的 document，由於我們知道<code>_id</code>是獨一無二的，因此可以預期 MongoDB 只會返回一筆（或零筆）資料：</p>
 <figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.products.find( { _id: 5 } )</span><br></pre></td></tr></tbody></table></figure>
 <blockquote>
-<p>使用 <code>find</code> 時會找出所有符合條件的 document。較少在實際應用中使用。<br>使用 <code>findOne</code> 時，會找出第一筆符合條件的 document。</p>
+<p>使用 <code>find</code> 會找出所有符合條件的 document。<br>使用 <code>findOne</code> 時，會找出<strong>第一筆</strong>符合條件的 document。</p>
 </blockquote>
 <h3 id="Operators"><a href="#Operators" class="headerlink" title="Operators"></a>Operators</h3><p>MongoDB 提供了許多<code>Operators（操作符）</code>讓搭配 query 使用，讓我們可以更精準描述想要查詢的資料。</p>
 <p>如下面例子中我們使用<code>$gt（greater than）</code>操作符，幫助我們查詢出所有 distance（距離）&gt; 1000 的航班資訊：</p>
@@ -213,9 +213,20 @@
 <blockquote>
 <p>更詳細的 Operator 列表可以參考<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/reference/operator/query/">官方文件</a>。</p>
 </blockquote>
+<h3 id="Cursor-Object"><a href="#Cursor-Object" class="headerlink" title="Cursor Object"></a>Cursor Object</h3><p>當我們透過 shell 操作<code>find</code>指令時，就算已經加上 query 條件，還是有機會一次拿回過多資料導致效率低落（想像你要搜尋姓氏開頭是 A 的使用者，可能超級超級多）。因為效率考量，使用 shell 的 find 指令時，MongoDB 其實是回傳一個<code>Cursor Object</code>，而不是所有符合條件的資料。</p>
+<p>Cursor Object 包含了：</p>
+<ol>
+<li>部分資料：MongoDB 預設會回傳 20 筆資料</li>
+<li>資料指針：指向目前拿到的最後一筆資料。我們可以透過 <code>next</code> 方法向 MongoDB 拿更多資料。</li>
+</ol>
+<figure class="highlight javascript hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 透過 find 指令找出所有血型是 A、B 的 user。拿到 mongoDB 回傳的 Cursor object</span></span><br><span class="line"><span class="hljs-keyword">var</span> myCursor = db.users.find( { <span class="hljs-attr">bloodType</span>: { <span class="hljs-attr">$in</span>: [<span class="hljs-string">'A'</span>, <span class="hljs-string">'B'</span>] } } );</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 把 cursor 中的資料轉換成 array，預設會拿 20 筆</span></span><br><span class="line"><span class="hljs-keyword">var</span> documentArray = myCursor.toArray();</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 透過 hasNext 檢查看看還有還有更多資料，有的話就透過 cursor 的 next 方法拿，並 print 出來</span></span><br><span class="line"><span class="hljs-keyword">while</span> (myCursor.hasNext()) {</span><br><span class="line">   printjson(myCursor.next());</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<blockquote>
+<p>關於 Cursor 的更多使用方法可以參考<a target="_blank" rel="noopener" href="https://docs.mongodb.com/manual/tutorial/iterate-a-cursor/">官方文件</a></p>
+</blockquote>
 <h2 id="Update-更新資料"><a href="#Update-更新資料" class="headerlink" title="Update 更新資料"></a>Update 更新資料</h2><p>更新跟創建的方式很像。可以選擇只更新一筆資料、也可以一次更新多筆資料。</p>
 <h3 id="updateOne"><a href="#updateOne" class="headerlink" title="updateOne"></a>updateOne</h3><p>在操作更新時，我們使用 query 告訴 MongoDB「想要更新哪些資料」以及「如何更新他們」。</p>
-<p>如下面的例子，我們在<code>inventory</code> collection 中找尋<code>item = paper</code>的資料，並且把資料的 size 設為 100：</p>
+<p>如下面的例子，我們在名為<code>inventory</code>的 collection 中找尋<code>item = paper</code>的資料，並且把資料的 size 更新為 100：</p>
 <figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.inventory.updateOne(</span><br><span class="line">   { item: <span class="hljs-string">"paper"</span> },</span><br><span class="line">   {</span><br><span class="line">     <span class="hljs-variable">$set</span>: { <span class="hljs-string">"size"</span>: 100 },</span><br><span class="line">   }</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
 <blockquote>
 <p>由於我們使用<code>updateOne</code>指令，就算符合 query 條件的資料有很多筆，MongoDB 也只會更新符合條件的<strong>第一筆</strong> document。</p>
@@ -223,12 +234,9 @@
 <h3 id="updateMany"><a href="#updateMany" class="headerlink" title="updateMany"></a>updateMany</h3><p>同上述的例子，如果指令換成<code>updateMany</code>，則所有符合條件的資料都會被更新。</p>
 <figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.inventory.updateMany(</span><br><span class="line">   { item: <span class="hljs-string">"paper"</span> }, // 所有 item 欄位值是 paper 的資料都會被更新</span><br><span class="line">   {</span><br><span class="line">     <span class="hljs-variable">$set</span>: { <span class="hljs-string">"size"</span>: 100 },</span><br><span class="line">   }</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
 
-<p>使用<code>updateMany</code>要注意的地方是，如果我們在 query 中沒有放上條件，則 collection 中的<strong>所有資料</strong>都會被更新：</p>
-<figure class="highlight plaintext hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.inventory.updateMany(</span><br><span class="line">    {}, // 由於 query 為空，所有 document 都會加上 message 這個欄位</span><br><span class="line">    {</span><br><span class="line">        $set: { message: 'Opps' }</span><br><span class="line">    }</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
+<p>使用<code>updateMany</code>要注意的地方是，如果我們在 query 中沒有放上條件，則 collection 中的<strong>所有資料</strong>都會被更新，因此要小心使用！</p>
+<figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">db.inventory.updateMany(</span><br><span class="line">    {}, // 由於 query 為空，所有 document 都會加上 message 這個欄位</span><br><span class="line">    {</span><br><span class="line">        <span class="hljs-variable">$set</span>: { message: <span class="hljs-string">'Oops'</span> }</span><br><span class="line">    }</span><br><span class="line">)</span><br></pre></td></tr></tbody></table></figure>
 
-<blockquote>
-<p>在實際應用中，因為效能的考量，通常會避免用 updateMany 更新龐大資料</p>
-</blockquote>
 <h2 id="Delete-刪除資料"><a href="#Delete-刪除資料" class="headerlink" title="Delete 刪除資料"></a>Delete 刪除資料</h2><h3 id="deleteOne-與-deleteMany"><a href="#deleteOne-與-deleteMany" class="headerlink" title="deleteOne 與 deleteMany"></a>deleteOne 與 deleteMany</h3><p>刪除資料的邏輯跟查詢一樣，我們必須在 query 中描述要被刪除的資料條件。</p>
 <p>下述例子會將<code>_id = 5</code>的 document 刪除：</p>
 <figure class="highlight bash hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">db.products.deleteOne( { _id: 5 } )</span><br></pre></td></tr></tbody></table></figure>
