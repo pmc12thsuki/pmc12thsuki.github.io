@@ -2,7 +2,7 @@
 <html class="has-navbar-fixed-top">
 <head>
     <meta charset="utf-8">
-<title>新手到進階學 MongoDB（3）- Aggregation 教學 - Suki&#39;s blog</title>
+<title>新手到進階學 MongoDB（3）- Aggregation 教學 | Suki&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/outdated-browser/1.1.5/outdatedbrowser.min.css">
@@ -10,29 +10,31 @@
 
 
 
-<meta name="description" content="軟體開發、學習筆記、生活雜記">
+<meta name="description" content="後端工程師的軟體開發、學習筆記">
 
 
 
-<meta name="keywords" content="mongodb,database,教學,tutorial">
+<meta name="keywords" content="mongodb,database,教學,tutorial,aggregate">
 
 
 
-    <meta name="description" content="前言本篇文章是系列文新手到進階學 MongoDB 的第三篇，要介紹 MongoDB 中較進階的 Aggregation 用法。 文章的架構如下：  Aggregation 基本概念：什麼是 Pipeline 與 Stage ？ 常見的資料操作方法（ㄧ）：$match、$sort、$limit 常見的資料操作方法（二）$project、$group、$unwind Aggregation 綜合練習">
+    <meta name="description" content="本篇文章是系列文新手到進階學 MongoDB 的第三篇，要介紹 MongoDB 中較進階的 Aggregation 用法。 文章的架構如下：  Aggregation 基本概念：什麼是 Pipeline 與 Stage ？ 常見的資料操作方法（ㄧ）：$match、$sort、$limit 常見的資料操作方法（二）$project、$group、$unwind Aggregation 綜合練習  你">
 <meta property="og:type" content="article">
 <meta property="og:title" content="新手到進階學 MongoDB（3）- Aggregation 教學">
 <meta property="og:url" content="https://www.suki.website/mongodb-from-scratch/3/">
 <meta property="og:site_name" content="Suki&#39;s blog">
-<meta property="og:description" content="前言本篇文章是系列文新手到進階學 MongoDB 的第三篇，要介紹 MongoDB 中較進階的 Aggregation 用法。 文章的架構如下：  Aggregation 基本概念：什麼是 Pipeline 與 Stage ？ 常見的資料操作方法（ㄧ）：$match、$sort、$limit 常見的資料操作方法（二）$project、$group、$unwind Aggregation 綜合練習">
+<meta property="og:description" content="本篇文章是系列文新手到進階學 MongoDB 的第三篇，要介紹 MongoDB 中較進階的 Aggregation 用法。 文章的架構如下：  Aggregation 基本概念：什麼是 Pipeline 與 Stage ？ 常見的資料操作方法（ㄧ）：$match、$sort、$limit 常見的資料操作方法（二）$project、$group、$unwind Aggregation 綜合練習  你">
 <meta property="og:locale" content="zh_TW">
+<meta property="og:image" content="https://www.suki.website/favicon.png">
 <meta property="article:published_time" content="2021-07-28T06:17:41.000Z">
-<meta property="article:modified_time" content="2021-07-29T08:32:34.646Z">
+<meta property="article:modified_time" content="2021-08-03T03:17:40.952Z">
 <meta property="article:author" content="Suki Wang">
 <meta property="article:tag" content="mongodb">
 <meta property="article:tag" content="database">
 <meta property="article:tag" content="mongodb-from-scratch">
 <meta property="article:tag" content="mongodb 教學">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.suki.website/favicon.png">
 
 
 
@@ -166,7 +168,7 @@
     </div>
     <div class="article-entry is-size-6-mobile" itemprop="articleBody">
     
-        <html><head></head><body><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本篇文章是系列文<a href="/tags/mongodb-from-scratch/">新手到進階學 MongoDB</a> 的第三篇，要介紹 MongoDB 中較進階的 Aggregation 用法。</p>
+        <html><head></head><body><p>本篇文章是系列文<a href="/tags/mongodb-from-scratch/">新手到進階學 MongoDB</a> 的第三篇，要介紹 MongoDB 中較進階的 Aggregation 用法。</p>
 <p>文章的架構如下：</p>
 <ul>
 <li>Aggregation 基本概念：什麼是 Pipeline 與 Stage ？</li>
@@ -287,7 +289,7 @@
 <figure class="highlight js hljs"><figcaption><span>group</span></figcaption><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">  <span class="hljs-string">"$group"</span>: {</span><br><span class="line">    <span class="hljs-string">"_id"</span>: <span class="hljs-string">"$customer_id"</span>, <span class="hljs-comment">// 依照 customer_id 做分組</span></span><br><span class="line">    <span class="hljs-string">"first_purchase_date"</span>: {<span class="hljs-string">"$first"</span>: <span class="hljs-string">"$orderdate"</span>}, <span class="hljs-comment">// 找出第一筆（也是最早的） orderdate</span></span><br><span class="line">    <span class="hljs-string">"total_value"</span>: {<span class="hljs-string">"$sum"</span>: <span class="hljs-string">"$value"</span>}, <span class="hljs-comment">// 使用 sum 將每筆 order 的金額加總</span></span><br><span class="line">    <span class="hljs-string">"total_orders"</span>: {<span class="hljs-string">"$sum"</span>: <span class="hljs-number">1</span>}, <span class="hljs-comment">// 使用 sum 計算總共有幾筆 order</span></span><br><span class="line">  }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
 
-<p>我們把上述三個 stage 組裝成 pipeline，對 order collection 進行 aggregate 操作：</p>
+<p>我們把上述三個 stage 組裝成 pipeline，對<code>order</code>collection 進行 aggregate 操作：</p>
 <figure class="highlight js hljs"><figcaption><span>example-7</span></figcaption><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">db.orders.aggregate([</span><br><span class="line">  <span class="hljs-comment">// Match only orders made in 2020</span></span><br><span class="line">  {<span class="hljs-string">"$match"</span>: {</span><br><span class="line">    <span class="hljs-string">"orderdate"</span>: {</span><br><span class="line">      <span class="hljs-string">"$gte"</span>: ISODate(<span class="hljs-string">"2020-01-01T00:00:00Z"</span>),</span><br><span class="line">      <span class="hljs-string">"$lt"</span>: ISODate(<span class="hljs-string">"2021-01-01T00:00:00Z"</span>),</span><br><span class="line">    },</span><br><span class="line">  }},</span><br><span class="line">  <span class="hljs-comment">// Sort by order date ascending</span></span><br><span class="line">  {<span class="hljs-string">"$sort"</span>: {</span><br><span class="line">    <span class="hljs-string">"orderdate"</span>: <span class="hljs-number">1</span>,</span><br><span class="line">  }},</span><br><span class="line">  <span class="hljs-comment">// Group by customer</span></span><br><span class="line">  {<span class="hljs-string">"$group"</span>: {</span><br><span class="line">    <span class="hljs-string">"_id"</span>: <span class="hljs-string">"$customer_id"</span>,</span><br><span class="line">    <span class="hljs-string">"first_purchase_date"</span>: {<span class="hljs-string">"$first"</span>: <span class="hljs-string">"$orderdate"</span>},</span><br><span class="line">    <span class="hljs-string">"total_value"</span>: {<span class="hljs-string">"$sum"</span>: <span class="hljs-string">"$value"</span>},</span><br><span class="line">    <span class="hljs-string">"total_orders"</span>: {<span class="hljs-string">"$sum"</span>: <span class="hljs-number">1</span>},</span><br><span class="line">  }},</span><br><span class="line">]);</span><br></pre></td></tr></tbody></table></figure>
 <p>得出結果：</p>
 <figure class="highlight js hljs"><figcaption><span>example-7-result</span></figcaption><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">{</span><br><span class="line">  <span class="hljs-attr">customer_id</span>: <span class="hljs-string">'elise_smith@myemail.com'</span>,</span><br><span class="line">  <span class="hljs-attr">first_purchase_date</span>: ISODate(<span class="hljs-string">'2020-01-13T09:32:07.000Z'</span>),</span><br><span class="line">  <span class="hljs-attr">total_value</span>: NumberDecimal(<span class="hljs-string">'482.16'</span>),</span><br><span class="line">  <span class="hljs-attr">total_orders</span>: <span class="hljs-number">4</span></span><br><span class="line">},</span><br><span class="line">{</span><br><span class="line">  <span class="hljs-attr">customer_id</span>: <span class="hljs-string">'oranieri@warmmail.com'</span>,</span><br><span class="line">  <span class="hljs-attr">first_purchase_date</span>: ISODate(<span class="hljs-string">'2020-01-01T08:25:37.000Z'</span>),</span><br><span class="line">  <span class="hljs-attr">total_value</span>: NumberDecimal(<span class="hljs-string">'63.13'</span>),</span><br><span class="line">  <span class="hljs-attr">total_orders</span>: <span class="hljs-number">1</span></span><br><span class="line">},</span><br><span class="line">{</span><br><span class="line">  <span class="hljs-attr">customer_id</span>: <span class="hljs-string">'tj@wheresmyemail.com'</span>,</span><br><span class="line">  <span class="hljs-attr">first_purchase_date</span>: ISODate(<span class="hljs-string">'2020-08-18T23:04:48.000Z'</span>),</span><br><span class="line">  <span class="hljs-attr">total_value</span>: NumberDecimal(<span class="hljs-string">'192.58'</span>),</span><br><span class="line">  <span class="hljs-attr">total_orders</span>: <span class="hljs-number">2</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
