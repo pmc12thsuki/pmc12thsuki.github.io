@@ -38,7 +38,7 @@
   </url>
   
   <url>
-    <loc>https://www.suki.website/about-blog/</loc>
+    <loc>https://www.suki.website/bitwise/brief-ep1-ep5/</loc>
     
     <lastmod>2021-07-24</lastmod>
     
@@ -47,7 +47,7 @@
   </url>
   
   <url>
-    <loc>https://www.suki.website/bitwise/brief-ep1-ep5/</loc>
+    <loc>https://www.suki.website/about-blog/</loc>
     
     <lastmod>2021-07-24</lastmod>
     
@@ -104,6 +104,13 @@
 
   
   <url>
+    <loc>https://www.suki.website/categories/technology/</loc>
+    <lastmod>2022-04-16</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
     <loc>https://www.suki.website/categories/life/</loc>
     <lastmod>2022-04-16</lastmod>
     <changefreq>weekly</changefreq>
@@ -111,7 +118,7 @@
   </url>
   
   <url>
-    <loc>https://www.suki.website/categories/life/blog/</loc>
+    <loc>https://www.suki.website/categories/technology/database/</loc>
     <lastmod>2022-04-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -125,14 +132,7 @@
   </url>
   
   <url>
-    <loc>https://www.suki.website/categories/technology/</loc>
-    <lastmod>2022-04-16</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.suki.website/categories/technology/database/</loc>
+    <loc>https://www.suki.website/categories/life/blog/</loc>
     <lastmod>2022-04-16</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
